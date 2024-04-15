@@ -8,8 +8,13 @@ create too huge csv files.
 ```
 python query-migrate.py
 ```
-This will print to stdout the sql queries to run. Run them on the Postgres
-server
+This will print to stdout the sql queries to run.
+
+On the node where you'll run the query:
+```
+mkdir /tmp/to-migrate
+psql -h <server> -U <username> <db> -f /tmp/migrate/to-run.sql
+```
 
 You can customize the script for the start, end time, and for the duration of
 the csv files.
@@ -22,9 +27,9 @@ Let's compile the app first
 mvn clean install -DskipTests=true
 ```
 
-Then we run it:
+Then we run it on the node
 ```
-CSV_FOLDER=/tmp/csvs java -jar target/orch-to-bifrost2-runner.jar
+QUARKUS_DATASOURCE_USERNAME=<username> QUARKUS_DATASOURCE_PASSWORD=<pwd> QUARKUS_DATASOURCE_JDBC_URL="jdbc:postgresql://localhost:5432/db" CSV_FOLDER=/tmp/to-migrate java -jar target/orch-to-bifrost2-runner.jar
 ```
 
 This will communicate with the bifrost database (you may have to setup the
