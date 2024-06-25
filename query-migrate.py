@@ -1,16 +1,38 @@
 from dateutil.relativedelta import relativedelta
-import datetime
+from datetime import date, datetime, timedelta
+import argparse
 
 query = "\\echo Processing {start}\n\\copy (select id,endtime,temporarybuild,repourlog,buildlog from buildrecord where " \
         + "submittime > '{start}' and submittime < '{end}' order by submittime asc) to '{filename}' with csv;"
 
-start_date = "2023-01-01"
-stop_date = "2024-04-05"
+parser = argparse.ArgumentParser(
+                    prog='query-migrate.py',
+                    description='Migrate logs from PNC Orch DB to logstore',
+                    epilog='Have a nice day!')
 
-delta_increment = relativedelta(days=7)
+parser.add_argument('--start-date', help='Format: yyyy-mm-dd')  
+parser.add_argument('--stop-date', help='Format yyyy-mm-dd')  
+parser.add_argument('--automated', action='store_true', help='create a query from 1 day ago till now')
+args = parser.parse_args()
 
-start_datetime = datetime.datetime.strptime(start_date, "%Y-%m-%d")
-stop_datetime = datetime.datetime.strptime(stop_date, "%Y-%m-%d")
+if not args.automated:
+    if start_date is None:
+        raise Exception("Start date not specified")
+    if stop_date is None:
+        raise Exception("stop date not specified")
+
+    start_date = args.start_date
+    stop_date = args.stop_date
+    delta_increment = relativedelta(days=7)
+else:
+    now = date.today()
+    start_date = str(now - timedelta(days = 1))
+    stop_date = str(now)
+    delta_increment = relativedelta(days=1)
+
+
+start_datetime = datetime.strptime(start_date, "%Y-%m-%d")
+stop_datetime = datetime.strptime(stop_date, "%Y-%m-%d")
 
 while True:
 

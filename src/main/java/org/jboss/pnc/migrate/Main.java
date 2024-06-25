@@ -101,17 +101,17 @@ public class Main {
         Collection<FinalLog> buildLogs = FinalLog.getFinalLogsWithoutPreviousRetries(processContext, "build-log");
 
         if (alignmentLogs.isEmpty()) {
-            Log.infof("Inserting new alignment log for %s", processContext);
+            Log.infof("[%s] Inserting new alignment log for %s", endDateTime, processContext);
             insertLog(toUse, "org.jboss.pnc._userlog_.alignment-log", endDateTime.atOffset(ZoneOffset.UTC), alignmentLog, "alignment-log");
         } else {
-            Log.infof("No alignment log to do");
+            Log.infof("[%s][%s] No alignment log to do", endDateTime, id);
         }
 
         if (buildLogs.isEmpty()) {
-            Log.infof("Inserting new build log for %s", processContext);
+            Log.infof("[%s] Inserting new build log for %s", endDateTime, processContext);
             insertLog(toUse, "org.jboss.pnc._userlog_.build-agent", endDateTime.atOffset(ZoneOffset.UTC), buildLog, "build-log");
         } else {
-            Log.infof("No build log to do");
+            Log.infof("[%s][%s] No build log to do", endDateTime, id);
         }
     }
 
