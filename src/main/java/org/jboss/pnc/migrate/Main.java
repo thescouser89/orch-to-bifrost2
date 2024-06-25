@@ -1,6 +1,7 @@
 package org.jboss.pnc.migrate;
 
 import io.quarkus.logging.Log;
+import io.quarkus.runtime.Quarkus;
 import io.quarkus.scheduler.Scheduled;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
@@ -64,6 +65,7 @@ public class Main {
                 processCsvEntry(line);
             }
             Log.infof("-- Done!");
+            Quarkus.blockingExit();
         }
     }
 
