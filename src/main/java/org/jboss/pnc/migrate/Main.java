@@ -65,8 +65,8 @@ public class Main {
                 processCsvEntry(line);
             }
             Log.infof("-- Done!");
-            Quarkus.blockingExit();
         }
+        Quarkus.blockingExit();
     }
 
     @Transactional
